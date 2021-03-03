@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AsteroidsGame
+namespace MonoGameRPG
 {
     /// <summary>
     /// This is the base class for all 2D Sprites
@@ -15,14 +15,16 @@ namespace AsteroidsGame
     {
         // Structures
 
-        public Rectangle Boundary;
+        public Rectangle Boundary { get; set; }
 
-        public Vector2 StartPosition;
+        public Vector2 StartPosition { get; set; }
 
-        public Vector2 Position;
+        public Vector2 Position { get; set; }
 
         // Properties
         public int MaxSpeed { get; set; }
+
+        public int MinSpeed { get; set; }
 
         public int Speed { get; set; }
 
@@ -63,14 +65,15 @@ namespace AsteroidsGame
         /// </summary>
         public Sprite(int x, int y)
         {
+            Position = new Vector2(x, y);
+            StartPosition = Position;
+
             MaxSpeed = 1000;
-            Speed = 300;
+            MinSpeed = 200;
+            Speed = MinSpeed;
 
             IsVisible = true;
             IsAlive = true;
-
-            Position = new Vector2(x, y);
-            StartPosition = Position;
         }
 
         public Vector2 GetCenterPosition()
