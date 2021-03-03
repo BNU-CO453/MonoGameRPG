@@ -1,0 +1,50 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace MonoGameRPG
+{
+    public class PlayerSprite : Sprite
+    {
+        public PlayerSprite(int x, int y) : base(x, y) { }
+
+        /// <summary>
+        /// delta time is the time elapsed in second (usualy 1/60 second)
+        /// 0.01667 seconds.  So to move 1 pixel at 60 fps the speed should
+        /// be set to 60.
+        /// </summary>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            KeyboardState keyState = Keyboard.GetState();
+
+            float newX, newY;
+
+            if(keyState.IsKeyDown(Keys.Right))
+            {
+                newX = Position.X + Speed * deltaTime;
+                Position = new Vector2(newX , Position.Y);
+            }
+            
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                newX = Position.X - Speed * deltaTime;
+                Position = new Vector2(newX, Position.Y);
+            }
+            
+            if (keyState.IsKeyDown(Keys.Up))
+            {
+                newY = Position.Y - Speed * deltaTime;
+                Position = new Vector2(Position.X, newY);
+            }
+            
+            if (keyState.IsKeyDown(Keys.Down))
+            {
+                newY = Position.Y + Speed * deltaTime;
+                Position = new Vector2(Position.X, newY);
+            }
+
+        }
+    }
+}

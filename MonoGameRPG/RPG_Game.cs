@@ -27,6 +27,8 @@ namespace MonoGameRPG
         private Texture2D ballImage;
         private Texture2D skullImage;
 
+        private PlayerSprite player;
+
         public RPG_Game()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -66,6 +68,14 @@ namespace MonoGameRPG
             backgroundImage = Content.Load<Texture2D>("background");
             ballImage = Content.Load<Texture2D>("ball");
             skullImage = Content.Load<Texture2D>("skull");
+
+            SetupSprites();
+        }
+
+        private void SetupSprites()
+        {
+            player = new PlayerSprite(200, 300);
+            player.Image = playerImage;
         }
 
         protected override void Update(GameTime gameTime)
@@ -73,7 +83,7 @@ namespace MonoGameRPG
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -88,6 +98,8 @@ namespace MonoGameRPG
 
             spriteBatch.Draw(
                 backgroundImage, position, Color.White);
+
+            spriteBatch.Draw(player.Image, player.Position, Color.Yellow);
 
             spriteBatch.End();
             
