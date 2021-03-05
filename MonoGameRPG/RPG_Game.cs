@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Comora;
 
 namespace MonoGameRPG
 {
@@ -29,6 +30,10 @@ namespace MonoGameRPG
 
         private PlayerSprite player;
 
+        //private AndreiCamera camera;
+        private Camera camera;
+        private Viewport viewPort;
+
         public RPG_Game()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,6 +52,11 @@ namespace MonoGameRPG
             graphics.PreferredBackBufferHeight = HD_Height;
             graphics.ApplyChanges();
 
+            viewPort = new Viewport(0,0, HD_Width, HD_Height);
+
+            //camera = new AndreiCamera(viewPort);
+            camera = new Camera(graphics.GraphicsDevice);
+            
             base.Initialize();
         }
 
@@ -85,6 +95,11 @@ namespace MonoGameRPG
 
             player.Update(gameTime);
 
+            camera.Position = player.Position;
+            camera.Update(gameTime);
+
+            //camera.Update(viewPort);
+
             base.Update(gameTime);
         }
 
@@ -92,14 +107,15 @@ namespace MonoGameRPG
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+//            spriteBatch.Begin(transformMatrix: camera.Transform);
+            spriteBatch.Begin(camera);
 
             Vector2 position = new Vector2(0, 0);
 
             spriteBatch.Draw(
                 backgroundImage, position, Color.White);
 
-            spriteBatch.Draw(player.Image, player.Position, Color.Yellow);
+            spriteBatch.Draw(player.Image, player.Position, Color.White);
 
             spriteBatch.End();
             
