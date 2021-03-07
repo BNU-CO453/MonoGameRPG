@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoGameRPG
+namespace MonoGameRPG.Tools
 {
     class AndreiCamera
     {

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoGameRPG
+namespace MonoGameRPG.Sprites
 {
     public class PlayerSprite : Sprite
     {
@@ -23,24 +23,28 @@ namespace MonoGameRPG
 
             if(keyState.IsKeyDown(Keys.Right))
             {
+                Direction = Directions.Right;
                 newX = Position.X + Speed * deltaTime;
                 Position = new Vector2(newX , Position.Y);
             }
             
             if (keyState.IsKeyDown(Keys.Left))
             {
+                Direction = Directions.Left;
                 newX = Position.X - Speed * deltaTime;
                 Position = new Vector2(newX, Position.Y);
             }
             
             if (keyState.IsKeyDown(Keys.Up))
             {
+                Direction = Directions.Up;
                 newY = Position.Y - Speed * deltaTime;
                 Position = new Vector2(Position.X, newY);
             }
             
             if (keyState.IsKeyDown(Keys.Down))
             {
+                Direction = Directions.Down;
                 newY = Position.Y + Speed * deltaTime;
                 Position = new Vector2(Position.X, newY);
             }

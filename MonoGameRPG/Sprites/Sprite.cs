@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonoGameRPG
+namespace MonoGameRPG.Sprites
 {
     /// <summary>
     /// This is the base class for all 2D Sprites
@@ -21,6 +21,14 @@ namespace MonoGameRPG
 
         public Vector2 Position { get; set; }
 
+        public Vector2 CenterPosition 
+        {
+            get 
+            {
+              return  new Vector2(Position.X - Image.Width / 2,
+                                  Position.Y - Image.Height / 2);
+            }
+        }
         // Properties
         public int MaxSpeed { get; set; }
 
@@ -28,7 +36,13 @@ namespace MonoGameRPG
 
         public int Speed { get; set; }
 
+        public Directions Direction { get; set; }
+
         public Texture2D Image { get; set; }
+
+        public SpriteAnimation Animation { get; set; }
+
+        public SpriteAnimation [] Animations { get; set; }
 
         public bool IsVisible { get; set; }
 
@@ -67,6 +81,7 @@ namespace MonoGameRPG
         {
             Position = new Vector2(x, y);
             StartPosition = Position;
+            Direction = Directions.Right;
 
             MaxSpeed = 1000;
             MinSpeed = 200;
@@ -74,13 +89,10 @@ namespace MonoGameRPG
 
             IsVisible = true;
             IsAlive = true;
+
+            Animations = new SpriteAnimation[4];
         }
 
-        public Vector2 GetCenterPosition()
-        {
-            return new Vector2(Position.X - Image.Width / 2,
-                Position.Y - Image.Height / 2);
-        }
 
         public void ResetPosition()
         {
@@ -90,6 +102,31 @@ namespace MonoGameRPG
         public virtual void Update(GameTime gameTime)
         {
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Animation != null)
+            {
+                switch(Direction)
+                {
+                    case Directions.Down:
+                        Animation = Animations[(int)Directions.Down];
+                        break;
+
+                    case Directions.Up:
+                        Animation = Animations[(int)Directions.Up];
+                        break;
+                    
+                    case Directions.Left:
+                        Animation = Animations[(int)Directions.Left];
+                        break;
+                    
+                    case Directions.Right:
+                        Animation = Animations[(int)Directions.Right];
+                        break;
+                }
+
+                Animation.Position = Position;
+                Animation.Update(gameTime);
+            }
         }
 
     }

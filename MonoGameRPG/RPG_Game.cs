@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Comora;
+using MonoGameRPG.Sprites;
+using MonoGameRPG.Tools;
 
 namespace MonoGameRPG
 {
@@ -86,7 +88,23 @@ namespace MonoGameRPG
         {
             player = new PlayerSprite(200, 300);
             player.Image = playerImage;
+
+            player.Animations[(int)Directions.Down] = 
+                new SpriteAnimation(walkDownImages, 4, 10);
+
+            player.Animations[(int)Directions.Left] =
+                new SpriteAnimation(walkLeftImages, 4, 10);
+
+            player.Animations[(int)Directions.Right] =
+                new SpriteAnimation(walkRightImages, 4, 10);
+
+            player.Animations[(int)Directions.Up] =
+                new SpriteAnimation(walkUpImages, 4, 10);
+
+            player.Animation = player.Animations[(int)Directions.Down];
+
         }
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -115,7 +133,9 @@ namespace MonoGameRPG
             spriteBatch.Draw(
                 backgroundImage, position, Color.White);
 
-            spriteBatch.Draw(player.Image, player.Position, Color.White);
+            //spriteBatch.Draw(player.Image, player.Position, Color.White);
+
+            player.Animation.Draw(spriteBatch);
 
             spriteBatch.End();
             
