@@ -4,8 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoGameRPG.Sprites
 {
-    public class PlayerSprite : Sprite
+    public class PlayerSprite : AnimatedSprite
     {
+        public Projectiles projectiles { get; set; }
+
+        private KeyboardState lastKeyState;
+
         public PlayerSprite(int x, int y) : base(x, y) { }
 
         /// <summary>
@@ -20,40 +24,57 @@ namespace MonoGameRPG.Sprites
             KeyboardState keyState = Keyboard.GetState();
 
             float newX, newY;
-            IsMoving = false;
+            IsActive = false;
 
             if(keyState.IsKeyDown(Keys.Right))
             {
                 Direction = Directions.Right;
-                newX = Position.X + Speed * deltaTime;
-                Position = new Vector2(newX , Position.Y);
-                IsMoving = true;
+                IsActive = true;
             }
             
             if (keyState.IsKeyDown(Keys.Left))
             {
                 Direction = Directions.Left;
-                newX = Position.X - Speed * deltaTime;
-                Position = new Vector2(newX, Position.Y);
-                IsMoving = true;
+                IsActive = true;
             }
 
             if (keyState.IsKeyDown(Keys.Up))
             {
                 Direction = Directions.Up;
-                newY = Position.Y - Speed * deltaTime;
-                Position = new Vector2(Position.X, newY);
-                IsMoving = true;
+                IsActive = true;
             }
 
             if (keyState.IsKeyDown(Keys.Down))
             {
                 Direction = Directions.Down;
-                newY = Position.Y + Speed * deltaTime;
-                Position = new Vector2(Position.X, newY);
-                IsMoving = true;
+                IsActive = true;
             }
 
+            if (keyState.IsKeyDown(Keys.Space) && projectiles != null &&
+                lastKeyState.IsKeyUp(Keys.Space))
+            {
+                projectiles.Fire(Position, Direction);
+            }
+
+            lastKeyState = keyState;
+
+            if (projectiles != null)
+                 projectiles.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+             if(projectiles != null  && projectiles.IsLoaded())
+            {
+                 projectiles.Draw(spriteBatch);
+            }
+        }
+
+        public void AddProjectiles(Texture2D image)
+        {
+            projectiles = new Projectiles(image);
         }
     }
 }

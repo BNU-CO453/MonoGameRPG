@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoGameRPG.Tools
 {
-    class AndreiCamera
+    class AdjustableCamera
     {
         public float Zoom { get; set; }
         public Vector2 Position { get; set; }
@@ -19,7 +19,7 @@ namespace MonoGameRPG.Tools
         private float zoom;
         private float previousZoom;
 
-        public AndreiCamera(Viewport viewport)
+        public AdjustableCamera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
             Zoom = 1f;

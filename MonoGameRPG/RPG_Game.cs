@@ -32,8 +32,9 @@ namespace MonoGameRPG
 
         private PlayerSprite player;
 
-        //private AndreiCamera camera;
+        private AdjustableCamera adjustableCamera;
         private Camera camera;
+
         private Viewport viewPort;
 
         public RPG_Game()
@@ -56,7 +57,7 @@ namespace MonoGameRPG
 
             viewPort = new Viewport(0,0, HD_Width, HD_Height);
 
-            //camera = new AndreiCamera(viewPort);
+            adjustableCamera = new AdjustableCamera(viewPort);
             camera = new Camera(graphics.GraphicsDevice);
             
             base.Initialize();
@@ -86,7 +87,7 @@ namespace MonoGameRPG
 
         private void SetupSprites()
         {
-            player = new PlayerSprite(200, 300);
+            player = new PlayerSprite(800, 700);
             player.Image = playerImage;
 
             player.Animations[(int)Directions.Down] = 
@@ -101,7 +102,9 @@ namespace MonoGameRPG
             player.Animations[(int)Directions.Up] =
                 new SpriteAnimation(walkUpImages, 4, 10);
 
-            player.Animation = player.Animations[(int)Directions.Down];
+           player.Animation = player.Animations[(int)Directions.Left];
+
+            player.AddProjectiles(ballImage);
 
         }
 
@@ -133,9 +136,7 @@ namespace MonoGameRPG
             spriteBatch.Draw(
                 backgroundImage, position, Color.White);
 
-            //spriteBatch.Draw(player.Image, player.Position, Color.White);
-
-            player.Animation.Draw(spriteBatch);
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
             

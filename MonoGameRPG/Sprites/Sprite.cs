@@ -40,15 +40,21 @@ namespace MonoGameRPG.Sprites
 
         public Texture2D Image { get; set; }
 
-        public SpriteAnimation Animation { get; set; }
+        public Color Color = Color.White;
 
-        public SpriteAnimation [] Animations { get; set; }
+        public Vector2 Origin;
+
+        public float Rotation = 0f;
+
+        public float Scale = 1f;
+
+        public SpriteEffects SpriteEffect;
 
         public bool IsVisible { get; set; }
 
         public bool IsAlive { get; set; }
 
-        public bool IsMoving { get; set; }
+        public bool IsActive { get; set; }
 
         public int Width 
         {
@@ -87,36 +93,63 @@ namespace MonoGameRPG.Sprites
 
             MaxSpeed = 1000;
             MinSpeed = 200;
+
             Speed = MinSpeed;
 
             IsVisible = true;
             IsAlive = true;
-            IsMoving = false;
-
-            Animations = new SpriteAnimation[4];
+            IsActive = true;
         }
 
 
         public void ResetPosition()
         {
             Position = StartPosition;
+            Speed = 0;
         }
 
         public virtual void Update(GameTime gameTime)
         {
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Animation != null)
+            
+            if(IsActive)
             {
-                Animation = Animations[(int)Direction];
+                int newX, newY;
+                
+                switch(Direction)
+                {
+                    case Directions.Left:
+                        newX = (int)(Position.X - Speed * deltaTime);
+                        Position = new Vector2(newX, Position.Y);
+                        break;
 
-                Animation.Position = Position;
+                    case Directions.Right:
+                        newX = (int)(Position.X + Speed * deltaTime);
+                        Position = new Vector2(newX, Position.Y);
+                        break;
 
-                if (IsMoving)
-                    Animation.Update(gameTime);
-                else
-                    Animation.SetFrame(1);
+                    case Directions.Down:
+                        newY = (int)(Position.Y + Speed * deltaTime);
+                        Position = new Vector2(Position.X, newY);
+                        break;
+
+                    case Directions.Up:
+                        newY = (int)(Position.Y - Speed * deltaTime);
+                        Position = new Vector2(Position.X, newY);
+                        break;
+                }
             }
+
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Image,
+                Position,
+                new Rectangle(0, 0, Width, Height),
+                Color, Rotation, Origin,
+                Scale, SpriteEffect, 0f);
         }
 
     }
