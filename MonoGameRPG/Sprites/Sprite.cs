@@ -48,6 +48,8 @@ namespace MonoGameRPG.Sprites
 
         public bool IsAlive { get; set; }
 
+        public bool IsMoving { get; set; }
+
         public int Width 
         {
             get { return Image.Width; }
@@ -89,6 +91,7 @@ namespace MonoGameRPG.Sprites
 
             IsVisible = true;
             IsAlive = true;
+            IsMoving = false;
 
             Animations = new SpriteAnimation[4];
         }
@@ -105,27 +108,14 @@ namespace MonoGameRPG.Sprites
 
             if (Animation != null)
             {
-                switch(Direction)
-                {
-                    case Directions.Down:
-                        Animation = Animations[(int)Directions.Down];
-                        break;
-
-                    case Directions.Up:
-                        Animation = Animations[(int)Directions.Up];
-                        break;
-                    
-                    case Directions.Left:
-                        Animation = Animations[(int)Directions.Left];
-                        break;
-                    
-                    case Directions.Right:
-                        Animation = Animations[(int)Directions.Right];
-                        break;
-                }
+                Animation = Animations[(int)Direction];
 
                 Animation.Position = Position;
-                Animation.Update(gameTime);
+
+                if (IsMoving)
+                    Animation.Update(gameTime);
+                else
+                    Animation.SetFrame(1);
             }
         }
 

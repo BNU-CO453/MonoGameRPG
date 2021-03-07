@@ -77,7 +77,7 @@ namespace MonoGameRPG.Sprites
             }
         }
 
-        public void setFrame(int frame)
+        public void SetFrame(int frame)
         {
             FrameIndex = frame;
         }

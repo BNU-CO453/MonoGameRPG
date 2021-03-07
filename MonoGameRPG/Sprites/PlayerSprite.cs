@@ -20,12 +20,14 @@ namespace MonoGameRPG.Sprites
             KeyboardState keyState = Keyboard.GetState();
 
             float newX, newY;
+            IsMoving = false;
 
             if(keyState.IsKeyDown(Keys.Right))
             {
                 Direction = Directions.Right;
                 newX = Position.X + Speed * deltaTime;
                 Position = new Vector2(newX , Position.Y);
+                IsMoving = true;
             }
             
             if (keyState.IsKeyDown(Keys.Left))
@@ -33,20 +35,23 @@ namespace MonoGameRPG.Sprites
                 Direction = Directions.Left;
                 newX = Position.X - Speed * deltaTime;
                 Position = new Vector2(newX, Position.Y);
+                IsMoving = true;
             }
-            
+
             if (keyState.IsKeyDown(Keys.Up))
             {
                 Direction = Directions.Up;
                 newY = Position.Y - Speed * deltaTime;
                 Position = new Vector2(Position.X, newY);
+                IsMoving = true;
             }
-            
+
             if (keyState.IsKeyDown(Keys.Down))
             {
                 Direction = Directions.Down;
                 newY = Position.Y + Speed * deltaTime;
                 Position = new Vector2(Position.X, newY);
+                IsMoving = true;
             }
 
         }
