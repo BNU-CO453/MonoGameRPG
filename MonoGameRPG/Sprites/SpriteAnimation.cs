@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameRPG.Tools;
 
 namespace MonoGameRPG.Sprites
 {
     public class SpriteManager
     {
-        protected Texture2D Texture;
-        
+        public Texture2D SpriteSheet;
+
         public Vector2 Position = Vector2.Zero;
         
         public Color Color = Color.White;
@@ -19,24 +20,25 @@ namespace MonoGameRPG.Sprites
         
         public SpriteEffects SpriteEffect;
         
-        protected Rectangle[] Rectangles;
+        public Rectangle[] Rectangles;
         
         protected int FrameIndex = 0;
 
         public SpriteManager(Texture2D Texture, int frames)
         {
-            this.Texture = Texture;
+            this.SpriteSheet = Texture;
             int width = Texture.Width / frames;
             
             Rectangles = new Rectangle[frames];
 
             for (int i = 0; i < frames; i++)
                 Rectangles[i] = new Rectangle(i * width, 0, width, Texture.Height);
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, 
+            spriteBatch.Draw(SpriteSheet, 
                 Position, Rectangles[FrameIndex], 
                 Color, Rotation, Origin, Scale, SpriteEffect, 0f);
         }
@@ -55,8 +57,7 @@ namespace MonoGameRPG.Sprites
 
         private float timeElapsed;
 
-        public SpriteAnimation(Texture2D Texture, int frames, int fps) : 
-            base(Texture, frames) 
+        public SpriteAnimation(Texture2D Texture, int frames, int fps) : base(Texture, frames) 
         {
             FramesPerSecond = fps;
         }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Comora;
 using MonoGameRPG.Sprites;
 using MonoGameRPG.Tools;
+using System.Collections.Generic;
 
 namespace MonoGameRPG
 {
@@ -16,7 +17,9 @@ namespace MonoGameRPG
 
         // Attributes/variables
 
-        private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphicsManager;
+        private GraphicsDevice graphics;
+
         private SpriteBatch spriteBatch;
 
         private Texture2D playerImage;
@@ -31,6 +34,7 @@ namespace MonoGameRPG
         private Texture2D skullImage;
 
         private PlayerSprite player;
+        private EnemyController enemyController;
 
         private AdjustableCamera adjustableCamera;
         private Camera camera;
@@ -39,7 +43,7 @@ namespace MonoGameRPG
 
         public RPG_Game()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -51,14 +55,17 @@ namespace MonoGameRPG
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = HD_Width;
-            graphics.PreferredBackBufferHeight = HD_Height;
-            graphics.ApplyChanges();
+            graphicsManager.PreferredBackBufferWidth = HD_Width;
+            graphicsManager.PreferredBackBufferHeight = HD_Height;
+            graphicsManager.ApplyChanges();
+
+            graphics = graphicsManager.GraphicsDevice;
 
             viewPort = new Viewport(0,0, HD_Width, HD_Height);
 
             adjustableCamera = new AdjustableCamera(viewPort);
-            camera = new Camera(graphics.GraphicsDevice);
+
+            camera = new Camera(graphicsManager.GraphicsDevice);
             
             base.Initialize();
         }
@@ -82,12 +89,29 @@ namespace MonoGameRPG
             ballImage = Content.Load<Texture2D>("ball");
             skullImage = Content.Load<Texture2D>("skull");
 
-            SetupSprites();
+            SetupPlayerSprite();
+
+            SetupEnemySprites();
         }
 
-        private void SetupSprites()
+        private void SetupEnemySprites()
+        {
+            EnemySprite enemy = new EnemySprite(500, 400);
+            enemy.Graphics = graphics;
+
+            enemy.Animations[0] = new SpriteAnimation(skullImage, 10, 8);
+
+            enemy.Animation = enemy.Animations[0];
+            enemy.Player = player;
+
+            enemyController = new EnemyController(enemy);
+        }
+
+        private void SetupPlayerSprite()
         {
             player = new PlayerSprite(800, 700);
+            player.Speed = 200;
+
             player.Image = playerImage;
 
             player.Animations[(int)Directions.Down] = 
@@ -104,17 +128,27 @@ namespace MonoGameRPG
 
            player.Animation = player.Animations[(int)Directions.Left];
 
-            player.AddProjectiles(ballImage);
+           player.AddProjectiles(ballImage);
 
         }
 
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             player.Update(gameTime);
+
+            enemyController.Update(gameTime);
+
+            foreach (EnemySprite enemy in enemyController.Enemies)
+            {
+                player.Projectiles.CheckforHits(enemy);
+            }
+
+            enemyController.Enemies.RemoveAll(e => !e.IsAlive);
 
             camera.Position = player.Position;
             camera.Update(gameTime);
@@ -128,7 +162,7 @@ namespace MonoGameRPG
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-//            spriteBatch.Begin(transformMatrix: camera.Transform);
+            // spriteBatch.Begin(transformMatrix: camera.Transform);
             spriteBatch.Begin(camera);
 
             Vector2 position = new Vector2(0, 0);
@@ -137,6 +171,8 @@ namespace MonoGameRPG
                 backgroundImage, position, Color.White);
 
             player.Draw(spriteBatch);
+
+            enemyController.Draw(spriteBatch);
 
             spriteBatch.End();
             

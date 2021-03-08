@@ -5,6 +5,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoGameRPG.Tools
 {
+    /// <summary>
+    /// This Camera is adjustable in two main ways 
+    /// it can Zoom In/Out with the mouse wheel and 
+    /// it can move independant of the player object 
+    /// with separate keys (wasd)
+    /// </summary>
+    /// <author>
+    /// https://community.monogame.net/t/simple-2d-camera/9135
+    /// Andrei Cruceru found it and has got it working
+    /// https://github.com/andreicruceru95/RPGGame/blob/master/GameTest/Manager/Camera.cs.
+    /// </author>
     class AdjustableCamera
     {
         public float Zoom { get; set; }

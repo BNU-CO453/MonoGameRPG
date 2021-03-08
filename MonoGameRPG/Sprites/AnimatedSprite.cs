@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameRPG.Tools;
 
 namespace MonoGameRPG.Sprites
 {
@@ -10,6 +11,10 @@ namespace MonoGameRPG.Sprites
     /// </summary>
     public class AnimatedSprite : Sprite
     {
+        public GraphicsDevice Graphics { get; set; }
+
+        public int MaxAnimations = 12;
+
         public SpriteAnimation Animation { get; set; }
 
         public SpriteAnimation[] Animations { get; set; }
@@ -17,15 +22,24 @@ namespace MonoGameRPG.Sprites
 
         public AnimatedSprite(int x, int y) : base(x, y) 
         {
-            Animations = new SpriteAnimation[4];
+            Animations = new SpriteAnimation[MaxAnimations];
         }
 
+        /// <summary>
+        /// Animations [0] to [3] are walks in the four directions
+        /// </summary>
         public virtual void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if (Animation != null)
             {
+                if((Image == null) && (Graphics != null))
+                {
+                    Image = Animation.SpriteSheet.CreateTexture(
+                        Graphics, Animation.Rectangles[0]);
+                }
+
                 Animation = Animations[(int)Direction];
 
                 Animation.Position = Position;
@@ -37,6 +51,10 @@ namespace MonoGameRPG.Sprites
             }
         }
 
+        /// <summary>
+        /// If a current animation is set draw that 
+        /// otherwise draw a static image
+        /// </summary>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (Animation != null)

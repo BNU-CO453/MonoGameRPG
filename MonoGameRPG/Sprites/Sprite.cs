@@ -25,20 +25,23 @@ namespace MonoGameRPG.Sprites
         {
             get 
             {
-              return  new Vector2(Position.X - Image.Width / 2,
-                                  Position.Y - Image.Height / 2);
+                if (Image == null)
+                    return Vector2.Zero;
+                else
+                    return  new Vector2(Position.X - Image.Width / 2,
+                                        Position.Y - Image.Height / 2);
             }
         }
         // Properties
-        public int MaxSpeed { get; set; }
+        public static int MaxSpeed { get; set; }
 
-        public int MinSpeed { get; set; }
+        public static int MinSpeed { get; set; }
 
         public int Speed { get; set; }
 
         public Directions Direction { get; set; }
 
-        public Texture2D Image { get; set; }
+        public Texture2D Image{ get; set; }
 
         public Color Color = Color.White;
 
@@ -79,6 +82,9 @@ namespace MonoGameRPG.Sprites
         // Variables
 
         protected float deltaTime;
+
+        protected int frameWidth;
+        protected int frameHeight;
        
         /// <summary>
         /// Constructor sets the starting position of
@@ -92,7 +98,7 @@ namespace MonoGameRPG.Sprites
             Direction = Directions.Right;
 
             MaxSpeed = 1000;
-            MinSpeed = 200;
+            MinSpeed = 100;
 
             Speed = MinSpeed;
 

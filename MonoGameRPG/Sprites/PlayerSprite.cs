@@ -6,7 +6,7 @@ namespace MonoGameRPG.Sprites
 {
     public class PlayerSprite : AnimatedSprite
     {
-        public Projectiles projectiles { get; set; }
+        public ProjectileController Projectiles { get; set; }
 
         private KeyboardState lastKeyState;
 
@@ -26,55 +26,59 @@ namespace MonoGameRPG.Sprites
             float newX, newY;
             IsActive = false;
 
-            if(keyState.IsKeyDown(Keys.Right))
-            {
-                Direction = Directions.Right;
-                IsActive = true;
-            }
-            
-            if (keyState.IsKeyDown(Keys.Left))
-            {
-                Direction = Directions.Left;
-                IsActive = true;
-            }
-
-            if (keyState.IsKeyDown(Keys.Up))
-            {
-                Direction = Directions.Up;
-                IsActive = true;
-            }
-
-            if (keyState.IsKeyDown(Keys.Down))
-            {
-                Direction = Directions.Down;
-                IsActive = true;
-            }
-
-            if (keyState.IsKeyDown(Keys.Space) && projectiles != null &&
+            if (keyState.IsKeyDown(Keys.Space) && 
+                Projectiles != null &&
                 lastKeyState.IsKeyUp(Keys.Space))
             {
-                projectiles.Fire(Position, Direction);
+                Projectiles.Fire(Position, Direction);
             }
+            else
+            {
+                if (keyState.IsKeyDown(Keys.Right))
+                {
+                    Direction = Directions.Right;
+                    IsActive = true;
+                }
+
+                if (keyState.IsKeyDown(Keys.Left))
+                {
+                    Direction = Directions.Left;
+                    IsActive = true;
+                }
+
+                if (keyState.IsKeyDown(Keys.Up))
+                {
+                    Direction = Directions.Up;
+                    IsActive = true;
+                }
+
+                if (keyState.IsKeyDown(Keys.Down))
+                {
+                    Direction = Directions.Down;
+                    IsActive = true;
+                }
+            }
+
 
             lastKeyState = keyState;
 
-            if (projectiles != null)
-                 projectiles.Update(gameTime);
+            if (Projectiles != null)
+                 Projectiles.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-             if(projectiles != null  && projectiles.IsLoaded())
+             if(Projectiles != null  && Projectiles.IsLoaded())
             {
-                 projectiles.Draw(spriteBatch);
+                 Projectiles.Draw(spriteBatch);
             }
         }
 
         public void AddProjectiles(Texture2D image)
         {
-            projectiles = new Projectiles(image);
+            Projectiles = new ProjectileController(image);
         }
     }
 }
