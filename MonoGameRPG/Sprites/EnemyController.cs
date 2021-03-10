@@ -8,7 +8,7 @@ namespace MonoGameRPG.Sprites
     public class EnemyController
     {
         public List<EnemySprite> Enemies { get; set; }
-        public static double MaxTime = 10.0;
+        public static double MaxTime = 5.0;
 
         public EnemySprite EnemyTemplate { get; set; }
 
@@ -28,12 +28,8 @@ namespace MonoGameRPG.Sprites
 
             if(timer <= 0)
             {
-                EnemySprite enemy = new EnemySprite(400, 400);
-
-                enemy.Animations[0] = EnemyTemplate.Animations[0];
-                enemy.Animation = enemy.Animations[0];
-                enemy.Player = EnemyTemplate.Player;
-                enemy.Speed = Sprite.MinSpeed;
+                EnemySprite enemy = EnemyTemplate.Clone() as EnemySprite;
+                enemy.Position = new Vector2(400, 400);
 
                 Enemies.Add(enemy);
                 timer = MaxTime;
@@ -48,7 +44,6 @@ namespace MonoGameRPG.Sprites
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (EnemySprite enemy in Enemies)

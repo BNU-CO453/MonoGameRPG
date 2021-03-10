@@ -5,6 +5,7 @@ using Comora;
 using MonoGameRPG.Sprites;
 using MonoGameRPG.Tools;
 using System.Collections.Generic;
+using MonoGameRPG.Helpers;
 
 namespace MonoGameRPG
 {
@@ -22,12 +23,9 @@ namespace MonoGameRPG
 
         private SpriteBatch spriteBatch;
 
-        private Texture2D playerImage;
-
-        private Texture2D walkDownImages;
-        private Texture2D walkUpImages;
-        private Texture2D walkLeftImages;
-        private Texture2D walkRightImages;
+        private SpriteFont gameFont;
+        private SpriteFont timeFont;
+        private SpriteFont arialFont;
 
         private Texture2D backgroundImage;
         private Texture2D ballImage;
@@ -78,57 +76,69 @@ namespace MonoGameRPG
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerImage = Content.Load<Texture2D>("Player/player");
-            
-            walkDownImages = Content.Load<Texture2D>("Player/walkDown");
-            walkUpImages = Content.Load<Texture2D>("Player/walkUp");
-            walkRightImages = Content.Load<Texture2D>("Player/walkRight");
-            walkLeftImages = Content.Load<Texture2D>("Player/walkLeft");
+            TextHelper.LoadFont(Content, spriteBatch);
+
+            gameFont = Content.Load<SpriteFont>("spaceFont");
+            timeFont = Content.Load<SpriteFont>("timerFont");
+            arialFont = Content.Load<SpriteFont>("Arial");
 
             backgroundImage = Content.Load<Texture2D>("background");
+
             ballImage = Content.Load<Texture2D>("ball");
-            skullImage = Content.Load<Texture2D>("skull");
 
             SetupPlayerSprite();
 
-            SetupEnemySprites();
+            //SetupEnemySprites();
         }
 
         private void SetupEnemySprites()
         {
-            EnemySprite enemy = new EnemySprite(500, 400);
+            skullImage = Content.Load<Texture2D>("skull");
+
+            EnemySprite enemy = new EnemySprite(skullImage, 500, 400);
             enemy.Graphics = graphics;
 
             enemy.Animations[0] = new SpriteAnimation(skullImage, 10, 8);
 
             enemy.Animation = enemy.Animations[0];
-            enemy.Player = player;
+            //enemy.Player = player;
 
             enemyController = new EnemyController(enemy);
         }
 
         private void SetupPlayerSprite()
         {
-            player = new PlayerSprite(800, 700);
+            Texture2D rscSheet = Content.Load<Texture2D>("rsc-sprite-sheet1");
+            
+            SpriteSheetHelper helper = new SpriteSheetHelper(graphics,
+                rscSheet, 4, 3);
+
+            Texture2D image = helper.FirstFrame;
+
+            player = new PlayerSprite(image, 800, 700);
             player.Speed = 200;
+            player.Scale = 4.0f;
 
-            player.Image = playerImage;
+            player.Boundary = new Rectangle(670, 700, 1810 - 670, 1800 - 700);
 
-            player.Animations[(int)Directions.Down] = 
-                new SpriteAnimation(walkDownImages, 4, 10);
+            player.TextFont = arialFont;
 
-            player.Animations[(int)Directions.Left] =
-                new SpriteAnimation(walkLeftImages, 4, 10);
 
-            player.Animations[(int)Directions.Right] =
-                new SpriteAnimation(walkRightImages, 4, 10);
+            player.Animations[(int)DirectionsKeys.Down] =
+                new SpriteAnimation(helper.AnimationRow[0], 3, 10);
 
-            player.Animations[(int)Directions.Up] =
-                new SpriteAnimation(walkUpImages, 4, 10);
+            player.Animations[(int)DirectionsKeys.Left] =
+                new SpriteAnimation(helper.AnimationRow[1], 3, 10);
 
-           player.Animation = player.Animations[(int)Directions.Left];
+            player.Animations[(int)DirectionsKeys.Right] =
+                new SpriteAnimation(helper.AnimationRow[2], 3, 10);
 
-           player.AddProjectiles(ballImage);
+            player.Animations[(int)DirectionsKeys.Up] =
+                new SpriteAnimation(helper.AnimationRow[3], 3, 10);
+
+            player.Animation = player.Animations[(int)DirectionsKeys.Left];
+
+            player.AddProjectiles(ballImage);
 
         }
 
@@ -141,14 +151,14 @@ namespace MonoGameRPG
 
             player.Update(gameTime);
 
-            enemyController.Update(gameTime);
+            //enemyController.Update(gameTime);
 
-            foreach (EnemySprite enemy in enemyController.Enemies)
-            {
-                player.Projectiles.CheckforHits(enemy);
-            }
+            //foreach (EnemySprite enemy in enemyController.Enemies)
+            //{
+            //    player.Projectiles.CheckforHits(enemy);
+            //}
 
-            enemyController.Enemies.RemoveAll(e => !e.IsAlive);
+            //enemyController.Enemies.RemoveAll(e => !e.IsAlive);
 
             camera.Position = player.Position;
             camera.Update(gameTime);
@@ -172,7 +182,7 @@ namespace MonoGameRPG
 
             player.Draw(spriteBatch);
 
-            enemyController.Draw(spriteBatch);
+            //enemyController.Draw(spriteBatch);
 
             spriteBatch.End();
             

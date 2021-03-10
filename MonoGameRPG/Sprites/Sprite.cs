@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameRPG.Helpers;
+using System;
 
 namespace MonoGameRPG.Sprites
 {
@@ -11,47 +13,48 @@ namespace MonoGameRPG.Sprites
     /// <Author>
     /// Derek Peacock
     /// </Author>
-    public class Sprite
+    public class Sprite: ICloneable
     {
         // Structures
+        public Texture2D Image { get; set; }
 
+        public Vector2 Position { get; set; }
+
+        // A rectangle limiting where the sprite can move
         public Rectangle Boundary { get; set; }
 
         public Vector2 StartPosition { get; set; }
 
-        public Vector2 Position { get; set; }
-
-        public Vector2 CenterPosition 
+        // Point around which the sprite rotates
+        public Vector2 Origin 
         {
             get 
             {
                 if (Image == null)
                     return Vector2.Zero;
                 else
-                    return  new Vector2(Position.X - Image.Width / 2,
-                                        Position.Y - Image.Height / 2);
+                    return  new Vector2(Position.X - Width / 2,
+                                        Position.Y - Height / 2);
             }
         }
+
         // Properties
-        public static int MaxSpeed { get; set; }
-
-        public static int MinSpeed { get; set; }
-
         public int Speed { get; set; }
 
-        public Directions Direction { get; set; }
-
-        public Texture2D Image{ get; set; }
+        public Vector2 Direction { get; set; }
 
         public Color Color = Color.White;
 
-        public Vector2 Origin;
 
         public float Rotation = 0f;
+
+        public float RotationSpeed = 0f;
 
         public float Scale = 1f;
 
         public SpriteEffects SpriteEffect;
+
+        public SpriteFont TextFont { get; set; }
 
         public bool IsVisible { get; set; }
 
@@ -61,21 +64,25 @@ namespace MonoGameRPG.Sprites
 
         public int Width 
         {
-            get { return Image.Width; }
+            get { return (int)(Image.Width * Scale); }
         }
 
         public int Height 
         {
-            get { return Image.Height; }
+            get { return (int)(Image.Height * Scale); }
         }
 
         // The rectangle occupied by the unscaled image
         public Rectangle BoundingBox 
         {
-            get 
+            get
             {
-                return new Rectangle(
-                    (int)Position.X, (int)Position.Y, Width, Height);
+                return new Rectangle
+                (
+                    (int)Position.X, 
+                    (int)Position.Y,
+                    Width, Height
+                );
             }
         }
         
@@ -83,28 +90,27 @@ namespace MonoGameRPG.Sprites
 
         protected float deltaTime;
 
-        protected int frameWidth;
-        protected int frameHeight;
+        protected bool debug = true;
        
         /// <summary>
         /// Constructor sets the starting position of
         /// the Sprite and current speed of a visible
         /// and alive sprite.
         /// </summary>
-        public Sprite(int x, int y)
+        public Sprite(Texture2D image, int x, int y)
         {
+            Image = image;
             Position = new Vector2(x, y);
             StartPosition = Position;
-            Direction = Directions.Right;
 
-            MaxSpeed = 1000;
-            MinSpeed = 100;
-
-            Speed = MinSpeed;
+            Direction = new Vector2(1, 0);
+            Speed = 200;
 
             IsVisible = true;
             IsAlive = true;
             IsActive = true;
+
+            Scale = 2;
         }
 
 
@@ -121,42 +127,42 @@ namespace MonoGameRPG.Sprites
             
             if(IsActive)
             {
-                int newX, newY;
-                
-                switch(Direction)
+                Vector2 newPosition = Position + (Direction * (Speed * deltaTime));
+
+                if (newPosition.X >= Boundary.X && 
+                    newPosition.Y >= Boundary.Y &&
+                    newPosition.X + Width < Boundary.X + Boundary.Width &&
+                    newPosition.Y + Height < Boundary.Y + Boundary.Height)
                 {
-                    case Directions.Left:
-                        newX = (int)(Position.X - Speed * deltaTime);
-                        Position = new Vector2(newX, Position.Y);
-                        break;
-
-                    case Directions.Right:
-                        newX = (int)(Position.X + Speed * deltaTime);
-                        Position = new Vector2(newX, Position.Y);
-                        break;
-
-                    case Directions.Down:
-                        newY = (int)(Position.Y + Speed * deltaTime);
-                        Position = new Vector2(Position.X, newY);
-                        break;
-
-                    case Directions.Up:
-                        newY = (int)(Position.Y - Speed * deltaTime);
-                        Position = new Vector2(Position.X, newY);
-                        break;
+                    Position = newPosition;
                 }
             }
-
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Image,
-                Position,
-                new Rectangle(0, 0, Width, Height),
-                Color, Rotation, Origin,
-                Scale, SpriteEffect, 0f);
+            if(debug)
+            {
+                TextHelper.DrawString(
+                    $"({Position.X:0},{Position.Y:0})", Position);
+            }
+
+            Rectangle destination = new Rectangle
+                ((int)Position.X, (int)Position.Y, Width, Height);
+
+            spriteBatch.Draw(Image, BoundingBox, Color.White);
+
+            //spriteBatch.Draw
+            //    (Image,
+            //     Position,
+            //     null,
+            //     Color.White, Rotation, Origin,
+            //     Scale, SpriteEffect, 10f);
         }
 
+        public virtual object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

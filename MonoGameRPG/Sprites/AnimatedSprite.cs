@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameRPG.Helpers;
 using MonoGameRPG.Tools;
 
 namespace MonoGameRPG.Sprites
@@ -9,7 +10,7 @@ namespace MonoGameRPG.Sprites
     /// one for each of four directions, Up,Down,Left & Right
     /// When the sprite stops the animation stops
     /// </summary>
-    public class AnimatedSprite : Sprite
+    public class AnimatedSprite : Sprite, System.ICloneable
     {
         public GraphicsDevice Graphics { get; set; }
 
@@ -19,8 +20,9 @@ namespace MonoGameRPG.Sprites
 
         public SpriteAnimation[] Animations { get; set; }
 
+        private int lastAnimation = 0;
 
-        public AnimatedSprite(int x, int y) : base(x, y) 
+        public AnimatedSprite(Texture2D image, int x, int y) : base(image, x, y) 
         {
             Animations = new SpriteAnimation[MaxAnimations];
         }
@@ -40,7 +42,22 @@ namespace MonoGameRPG.Sprites
                         Graphics, Animation.Rectangles[0]);
                 }
 
-                Animation = Animations[(int)Direction];
+                if (Animations[3] != null)
+                {
+                    if(Direction.X > 0)
+                        Animation = Animations[0];
+
+                    else if (Direction.Y > 0)
+                        Animation = Animations[1];
+
+                    else if (Direction.X < 0)
+                        Animation = Animations[2];
+
+                    else if (Direction.Y < 0)
+                        Animation = Animations[3];
+                }
+                else
+                    Animation = Animations[0];
 
                 Animation.Position = Position;
 
@@ -57,18 +74,27 @@ namespace MonoGameRPG.Sprites
         /// </summary>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
+
             if (Animation != null)
             {
+                if (debug)
+                {
+                    TextHelper.DrawString(
+                        $"({Position.X:0},{Position.Y:0})", Position);
+                }
+
+                Animation.Scale = Scale;
                 Animation.Draw(spriteBatch);
             }
             else
             {
-                spriteBatch.Draw(Image,
-                    Position,
-                    new Rectangle(0, 0, Width, Height),
-                    Color, Rotation, Origin,
-                    Scale, SpriteEffect, 0f);
+                base.Draw(spriteBatch);
             }
+        }
+
+        public override object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
     }

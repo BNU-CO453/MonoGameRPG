@@ -10,7 +10,7 @@ namespace MonoGameRPG.Sprites
 
         private KeyboardState lastKeyState;
 
-        public PlayerSprite(int x, int y) : base(x, y) { }
+        public PlayerSprite(Texture2D image, int x, int y) : base(image, x, y) { }
 
         /// <summary>
         /// delta time is the time elapsed in second (usualy 1/60 second)
@@ -19,11 +19,8 @@ namespace MonoGameRPG.Sprites
         /// </summary>
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             KeyboardState keyState = Keyboard.GetState();
 
-            float newX, newY;
             IsActive = false;
 
             if (keyState.IsKeyDown(Keys.Space) && 
@@ -36,29 +33,30 @@ namespace MonoGameRPG.Sprites
             {
                 if (keyState.IsKeyDown(Keys.Right))
                 {
-                    Direction = Directions.Right;
+                    Direction = new Vector2(1, 0);
                     IsActive = true;
                 }
 
                 if (keyState.IsKeyDown(Keys.Left))
                 {
-                    Direction = Directions.Left;
+                    Direction = new Vector2(-1, 0);
                     IsActive = true;
                 }
 
                 if (keyState.IsKeyDown(Keys.Up))
                 {
-                    Direction = Directions.Up;
+                    Direction = new Vector2(0, -1);
                     IsActive = true;
                 }
 
                 if (keyState.IsKeyDown(Keys.Down))
                 {
-                    Direction = Directions.Down;
+                    Direction = new Vector2(0, 1);
                     IsActive = true;
                 }
             }
 
+            base.Update(gameTime);
 
             lastKeyState = keyState;
 

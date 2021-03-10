@@ -4,7 +4,7 @@ using MonoGameRPG.Tools;
 
 namespace MonoGameRPG.Sprites
 {
-    public class SpriteManager
+    public class AnimationManager
     {
         public Texture2D SpriteSheet;
 
@@ -24,11 +24,12 @@ namespace MonoGameRPG.Sprites
         
         protected int FrameIndex = 0;
 
-        public SpriteManager(Texture2D Texture, int frames)
+        public AnimationManager(Texture2D Texture, int frames)
         {
             this.SpriteSheet = Texture;
-            int width = Texture.Width / frames;
-            
+            int width = Texture.Width  / frames;
+            int height = Texture.Height;
+
             Rectangles = new Rectangle[frames];
 
             for (int i = 0; i < frames; i++)
@@ -44,7 +45,7 @@ namespace MonoGameRPG.Sprites
         }
     }
 
-    public class SpriteAnimation : SpriteManager
+    public class SpriteAnimation : AnimationManager
     {
         public bool IsLooping = true;
 
@@ -57,7 +58,8 @@ namespace MonoGameRPG.Sprites
 
         private float timeElapsed;
 
-        public SpriteAnimation(Texture2D Texture, int frames, int fps) : base(Texture, frames) 
+        public SpriteAnimation(Texture2D Texture, int frames, int fps)
+            : base(Texture, frames) 
         {
             FramesPerSecond = fps;
         }

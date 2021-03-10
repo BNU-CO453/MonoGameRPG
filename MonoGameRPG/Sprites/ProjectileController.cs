@@ -22,29 +22,31 @@ namespace MonoGameRPG.Sprites
         /// Create a new projectile sprite and add it to the
         /// list of projectiles.
         /// </summary>
-        public void Fire(Vector2 position, Directions direction)
+        public void Fire(Vector2 position, Vector2 direction)
         {
-            Sprite sprite = new Sprite((int)position.X, (int)position.Y);
+            Sprite sprite = new Sprite(image, (int)position.X, (int)position.Y);
             
-            sprite.Image = image;
-            sprite.Speed = Sprite.MinSpeed * 2;
+            sprite.Speed = 200;
 
             sprite.IsActive = true;
             sprite.Direction = direction;
+            sprite.Boundary = new Rectangle(0, 0, 10000, 10000);
+            sprite.Scale = 1.0f;
+            sprite.Speed = 420;
 
-            if(direction == Directions.Left)
+            if(direction.X < 0)
             {
                 position.X -= (float)sprite.Width / 2;
             }
-            else if (direction == Directions.Right)
+            else if (direction.X > 0)
             {
                 position.X += (float)sprite.Width / 2;
             }
-            else if (direction == Directions.Down)
+            else if (direction.Y > 0)
             {
                 position.Y += (float)sprite.Height / 2;
             }
-            else if (direction == Directions.Up)
+            else if (direction.Y < 0)
             {
                 position.Y -= (float)sprite.Height / 2;
             }

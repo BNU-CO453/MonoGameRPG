@@ -5,10 +5,18 @@ namespace MonoGameRPG.Sprites
 {
     public class EnemySprite : AnimatedSprite
     {
+        public int EnemyNo { get; set; }
+
         public PlayerSprite Player { get; set; }
 
-        public EnemySprite(int x, int y) : base(x, y)
+        private bool debug = true;
+
+        private int enemySpeed = 120;
+
+        public EnemySprite(Texture2D image, int x, int y) : 
+            base(image, x, y)
         {
+            Speed = enemySpeed;
         }
 
         /// <summary>
@@ -18,16 +26,24 @@ namespace MonoGameRPG.Sprites
         {
             // Update Animation but do not move
 
-            Speed = 0;
             base.Update(gameTime);
 
-            
-            Speed = MinSpeed;
-            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector2 direction = Player.Position - Position;
             direction.Normalize();
-            Position += direction * Speed * deltaTime;
+            
+            //Position += (direction * Speed) * deltaTime;
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            if(debug)
+            {
+                //spriteBatch.DrawString()
+            }
+
         }
     }
 }
