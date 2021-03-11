@@ -49,10 +49,6 @@ namespace MonoGameRPG.Sprites
     {
         public bool IsLooping = true;
 
-        public int FramesPerSecond 
-        { 
-            set { timeToUpdate = (1f / value); } 
-        }
 
         private float timeToUpdate; //default, you may have to change it
 
@@ -61,7 +57,8 @@ namespace MonoGameRPG.Sprites
         public SpriteAnimation(Texture2D Texture, int frames, int fps)
             : base(Texture, frames) 
         {
-            FramesPerSecond = fps;
+            timeElapsed = 0;
+            timeToUpdate = 1.0f / (float)fps; 
         }
 
         public void Update(GameTime gameTime)
@@ -70,7 +67,7 @@ namespace MonoGameRPG.Sprites
 
             if (timeElapsed > timeToUpdate)
             {
-                timeElapsed -= timeToUpdate;
+                timeElapsed = 0;
 
                 if (FrameIndex < Rectangles.Length - 1)
                     FrameIndex++;

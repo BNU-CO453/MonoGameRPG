@@ -24,15 +24,11 @@ namespace MonoGameRPG.Sprites
         /// </summary>
         public override void Update(GameTime gameTime)
         {
-            // Update Animation but do not move
+            Vector2 newDirection = Player.Position - this.Position;
+            newDirection.Normalize();
+            Direction = newDirection;
 
             base.Update(gameTime);
-
-
-            Vector2 direction = Player.Position - Position;
-            direction.Normalize();
-            
-            //Position += (direction * Speed) * deltaTime;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

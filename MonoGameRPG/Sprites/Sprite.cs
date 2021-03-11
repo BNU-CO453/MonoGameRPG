@@ -127,9 +127,13 @@ namespace MonoGameRPG.Sprites
             
             if(IsActive)
             {
-                Vector2 newPosition = Position + (Direction * (Speed * deltaTime));
+                Vector2 newPosition = Position + ((Direction * Speed) * deltaTime);
 
-                if (newPosition.X >= Boundary.X && 
+                if(Boundary.Width == 0 || Boundary.Height == 0)
+                {
+                    Position = newPosition;
+                }
+                else if (newPosition.X >= Boundary.X && 
                     newPosition.Y >= Boundary.Y &&
                     newPosition.X + Width < Boundary.X + Boundary.Width &&
                     newPosition.Y + Height < Boundary.Y + Boundary.Height)

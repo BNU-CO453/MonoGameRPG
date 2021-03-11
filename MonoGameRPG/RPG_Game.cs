@@ -88,20 +88,26 @@ namespace MonoGameRPG
 
             SetupPlayerSprite();
 
-            //SetupEnemySprites();
+            SetupEnemySprites();
         }
 
         private void SetupEnemySprites()
         {
-            skullImage = Content.Load<Texture2D>("skull");
 
-            EnemySprite enemy = new EnemySprite(skullImage, 500, 400);
+            Texture2D skullSheet = Content.Load<Texture2D>("skull");
+            SpriteSheetHelper helper = new SpriteSheetHelper(graphics,
+                skullSheet, 10, 1);
+
+            Texture2D image = helper.FirstFrame;
+
+            EnemySprite enemy = new EnemySprite(image, 500, 400);
             enemy.Graphics = graphics;
 
-            enemy.Animations[0] = new SpriteAnimation(skullImage, 10, 8);
+            enemy.Animations[0] = new SpriteAnimation(skullSheet, 10, 8);
 
             enemy.Animation = enemy.Animations[0];
-            //enemy.Player = player;
+            enemy.Scale = 1f;
+            enemy.Player = player;
 
             enemyController = new EnemyController(enemy);
         }
@@ -117,7 +123,7 @@ namespace MonoGameRPG
 
             player = new PlayerSprite(image, 800, 700);
             player.Speed = 200;
-            player.Scale = 4.0f;
+            player.Scale = 2.0f;
 
             player.Boundary = new Rectangle(670, 700, 1810 - 670, 1800 - 700);
 
@@ -151,14 +157,14 @@ namespace MonoGameRPG
 
             player.Update(gameTime);
 
-            //enemyController.Update(gameTime);
+            enemyController.Update(gameTime);
 
-            //foreach (EnemySprite enemy in enemyController.Enemies)
-            //{
-            //    player.Projectiles.CheckforHits(enemy);
-            //}
+            foreach (EnemySprite enemy in enemyController.Enemies)
+            {
+                player.Projectiles.CheckforHits(enemy);
+            }
 
-            //enemyController.Enemies.RemoveAll(e => !e.IsAlive);
+            enemyController.Enemies.RemoveAll(e => !e.IsAlive);
 
             camera.Position = player.Position;
             camera.Update(gameTime);
@@ -182,7 +188,7 @@ namespace MonoGameRPG
 
             player.Draw(spriteBatch);
 
-            //enemyController.Draw(spriteBatch);
+            enemyController.Draw(spriteBatch);
 
             spriteBatch.End();
             
