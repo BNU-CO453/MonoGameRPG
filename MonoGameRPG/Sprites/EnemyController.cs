@@ -30,7 +30,6 @@ namespace MonoGameRPG.Sprites
             if(timer <= 0)
             {
                 EnemySprite enemy = EnemyTemplate.Clone() as EnemySprite;
-                enemy.Position = new Vector2(600, 400);
 
                 Enemies.Add(enemy);
                 timer = MaxTime;

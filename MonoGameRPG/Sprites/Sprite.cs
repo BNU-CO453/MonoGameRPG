@@ -23,8 +23,6 @@ namespace MonoGameRPG.Sprites
         // A rectangle limiting where the sprite can move
         public Rectangle Boundary { get; set; }
 
-        public Vector2 StartPosition { get; set; }
-
         // Point around which the sprite rotates
         public Vector2 Origin 
         {
@@ -91,33 +89,34 @@ namespace MonoGameRPG.Sprites
         protected float deltaTime;
 
         protected bool debug = true;
-       
+
         /// <summary>
-        /// Constructor sets the starting position of
-        /// the Sprite and current speed of a visible
-        /// and alive sprite.
+        /// Constructor initialises the sprite to face right
+        /// position (0, 0) with no speed but is visible
+        /// active and alive.
         /// </summary>
-        public Sprite(Texture2D image, int x, int y)
+        public Sprite()
         {
-            Image = image;
-            Position = new Vector2(x, y);
-            StartPosition = Position;
+            Position = new Vector2(100, 0);
 
             Direction = new Vector2(1, 0);
-            Speed = 200;
 
             IsVisible = true;
             IsAlive = true;
             IsActive = true;
 
-            Scale = 2;
+            Scale = 1;
         }
 
 
-        public void ResetPosition()
+        /// <summary>
+        /// Add a single image for the sprite and
+        /// then initialise it.
+        /// </summary>
+        /// <param name="image"></param>
+        public Sprite(Texture2D image) : this()
         {
-            Position = StartPosition;
-            Speed = 0;
+            Image = image;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -125,7 +124,7 @@ namespace MonoGameRPG.Sprites
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             
-            if(IsActive)
+            if(IsActive && IsAlive)
             {
                 Vector2 newPosition = Position + ((Direction * Speed) * deltaTime);
 
@@ -154,6 +153,7 @@ namespace MonoGameRPG.Sprites
             Rectangle destination = new Rectangle
                 ((int)Position.X, (int)Position.Y, Width, Height);
 
+            
             spriteBatch.Draw(Image, BoundingBox, Color.White);
 
             //spriteBatch.Draw

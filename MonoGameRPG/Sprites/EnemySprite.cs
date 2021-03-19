@@ -11,14 +11,6 @@ namespace MonoGameRPG.Sprites
 
         private bool debug = true;
 
-        private int enemySpeed = 120;
-
-        public EnemySprite(Texture2D image, int x, int y) : 
-            base(image, x, y)
-        {
-            Speed = enemySpeed;
-        }
-
         /// <summary>
         /// Move this sprite towards the player's position
         /// </summary>

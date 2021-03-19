@@ -41,7 +41,7 @@ namespace MonoGameRPG.Sprites
         {
             spriteBatch.Draw(SpriteSheet, 
                 Position, Rectangles[FrameIndex], 
-                Color, Rotation, Origin, Scale, SpriteEffect, 0f);
+                Color, Rotation, Origin, Scale, SpriteEffect, 1f);
         }
     }
 

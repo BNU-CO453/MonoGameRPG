@@ -82,7 +82,7 @@ namespace MonoGameRPG
             timeFont = Content.Load<SpriteFont>("timerFont");
             arialFont = Content.Load<SpriteFont>("Arial");
 
-            backgroundImage = Content.Load<Texture2D>("background");
+            backgroundImage = Content.Load<Texture2D>("game_background_4");
 
             ballImage = Content.Load<Texture2D>("ball");
 
@@ -94,20 +94,22 @@ namespace MonoGameRPG
         private void SetupEnemySprites()
         {
 
-            Texture2D skullSheet = Content.Load<Texture2D>("skull");
-            SpriteSheetHelper helper = new SpriteSheetHelper(graphics,
-                skullSheet, 10, 1);
+            Texture2D enemySheet = Content.Load<Texture2D>("rsc-sprite-sheet3");
+            SpriteSheetHelper helper = new SpriteSheetHelper(graphics, enemySheet, 4, 3);
 
-            Texture2D image = helper.FirstFrame;
-
-            EnemySprite enemy = new EnemySprite(image, 500, 400);
+            EnemySprite enemy = new EnemySprite();
+            enemy.Position = new Vector2(100, 820);
+            enemy.Speed = 60;
             enemy.Graphics = graphics;
 
-            enemy.Animations[0] = new SpriteAnimation(skullSheet, 10, 8);
+            enemy.Animations[0] = new SpriteAnimation(enemySheet, 10, 8);
 
             enemy.Animation = enemy.Animations[0];
-            enemy.Scale = 1f;
+            enemy.Scale = 3.0f;
             enemy.Player = player;
+            enemy.Speed = 100;
+
+            SetWalkAnimations(enemy, enemySheet);
 
             enemyController = new EnemyController(enemy);
         }
@@ -116,36 +118,44 @@ namespace MonoGameRPG
         {
             Texture2D rscSheet = Content.Load<Texture2D>("rsc-sprite-sheet1");
             
-            SpriteSheetHelper helper = new SpriteSheetHelper(graphics,
-                rscSheet, 4, 3);
+            player = new PlayerSprite();
+            player.Position = new Vector2(600, 820);
 
-            Texture2D image = helper.FirstFrame;
-
-            player = new PlayerSprite(image, 800, 700);
             player.Speed = 200;
-            player.Scale = 2.0f;
+            player.Scale = 3.0f;
 
-            player.Boundary = new Rectangle(670, 700, 1810 - 670, 1800 - 700);
+            player.Boundary = new Rectangle(0, 810, backgroundImage.Width, 1740 - 810);
 
             player.TextFont = arialFont;
 
-
-            player.Animations[(int)DirectionsKeys.Down] =
-                new SpriteAnimation(helper.AnimationRow[0], 3, 10);
-
-            player.Animations[(int)DirectionsKeys.Left] =
-                new SpriteAnimation(helper.AnimationRow[1], 3, 10);
-
-            player.Animations[(int)DirectionsKeys.Right] =
-                new SpriteAnimation(helper.AnimationRow[2], 3, 10);
-
-            player.Animations[(int)DirectionsKeys.Up] =
-                new SpriteAnimation(helper.AnimationRow[3], 3, 10);
-
-            player.Animation = player.Animations[(int)DirectionsKeys.Left];
+            SetWalkAnimations(player, rscSheet);
 
             player.AddProjectiles(ballImage);
 
+        }
+
+        private void SetWalkAnimations(AnimatedSprite sprite, Texture2D sheet)
+        {
+            SpriteSheetHelper helper = new SpriteSheetHelper(graphics,
+                sheet, 4, 3);
+
+            sprite.Animations[(int)DirectionsKeys.Down] =
+                new SpriteAnimation(helper.AnimationRow[0], 3, 10);
+
+            sprite.Animations[(int)DirectionsKeys.Left] =
+                new SpriteAnimation(helper.AnimationRow[1], 3, 10);
+
+            sprite.Animations[(int)DirectionsKeys.Right] =
+                new SpriteAnimation(helper.AnimationRow[2], 3, 10);
+
+            sprite.Animations[(int)DirectionsKeys.Up] =
+                new SpriteAnimation(helper.AnimationRow[3], 3, 10);
+
+            sprite.Animation = sprite.Animations[(int)DirectionsKeys.Left];
+            sprite.LastAnimation = 4;
+
+            Texture2D image = helper.FirstFrame;
+            sprite.Image = image;
         }
 
 

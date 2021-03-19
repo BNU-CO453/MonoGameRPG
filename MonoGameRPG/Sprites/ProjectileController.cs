@@ -15,7 +15,6 @@ namespace MonoGameRPG.Sprites
         {
             sprites =new List<Sprite>();
             this.image = image;
-
         }
 
         /// <summary>
@@ -24,13 +23,13 @@ namespace MonoGameRPG.Sprites
         /// </summary>
         public void Fire(Vector2 position, Vector2 direction)
         {
-            Sprite sprite = new Sprite(image, (int)position.X, (int)position.Y);
-            
-            sprite.Speed = 200;
+            Sprite sprite = new Sprite();
 
-            sprite.IsActive = true;
+            sprite.Image = image;
+            sprite.Position = new Vector2();
             sprite.Direction = direction;
-            sprite.Boundary = new Rectangle(0, 0, 10000, 10000);
+
+            sprite.Boundary = new Rectangle(-100, -100, 4000, 4000);
             sprite.Scale = 1.0f;
             sprite.Speed = 420;
 

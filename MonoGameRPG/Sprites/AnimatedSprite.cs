@@ -20,9 +20,9 @@ namespace MonoGameRPG.Sprites
 
         public SpriteAnimation[] Animations { get; set; }
 
-        private int lastAnimation = 0;
+        public int LastAnimation { get; set; }
 
-        public AnimatedSprite(Texture2D image, int x, int y) : base(image, x, y) 
+        public AnimatedSprite() : base(null) 
         {
             Animations = new SpriteAnimation[MaxAnimations];
         }
@@ -44,16 +44,16 @@ namespace MonoGameRPG.Sprites
 
                 if (Animations[3] != null)
                 {
-                    if(Direction.X > 0)
+                    if(Direction.X > 0 && Direction.Y < Direction.X)
                         Animation = Animations[0];
 
-                    else if (Direction.Y > 0)
+                    else if (Direction.Y > 0 && Direction.X < Direction.Y)
                         Animation = Animations[1];
 
-                    else if (Direction.X < 0)
+                    else if (Direction.X < 0 && Direction.X < Direction.Y)
                         Animation = Animations[2];
 
-                    else if (Direction.Y < 0)
+                    else if (Direction.Y < 0 && Direction.Y < Direction.X)
                         Animation = Animations[3];
                 }
                 else

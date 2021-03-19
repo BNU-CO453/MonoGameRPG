@@ -21,15 +21,15 @@ namespace MonoGameRPG.Tools
         public Texture2D [] AnimationRow { get; }
 
         public SpriteSheetHelper(GraphicsDevice graphics, 
-            Texture2D sheet, int rows, int frames)
+            Texture2D sheet, int rows, int cols)
         {
             SpriteSheet = sheet;
             this.rows = rows;
-            this.frames = frames;
+            this.frames = cols;
 
             frameHeight = sheet.Height / rows;
             sheetWidth = SpriteSheet.Width;
-            frameWidth = sheetWidth / frames;
+            frameWidth = sheetWidth / cols;
 
             AnimationRow = new Texture2D[rows];
 

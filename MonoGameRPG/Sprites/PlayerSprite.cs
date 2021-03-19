@@ -10,7 +10,10 @@ namespace MonoGameRPG.Sprites
 
         private KeyboardState lastKeyState;
 
-        public PlayerSprite(Texture2D image, int x, int y) : base(image, x, y) { }
+        public PlayerSprite(): base()
+        {
+            
+        }
 
         /// <summary>
         /// delta time is the time elapsed in second (usualy 1/60 second)
