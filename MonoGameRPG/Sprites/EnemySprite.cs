@@ -27,11 +27,6 @@ namespace MonoGameRPG.Sprites
         {
             base.Draw(spriteBatch);
 
-            if(debug)
-            {
-                //spriteBatch.DrawString()
-            }
-
         }
     }
 }

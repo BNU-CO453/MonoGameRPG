@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameRPG.Helpers;
-using MonoGameRPG.Tools;
 
 namespace MonoGameRPG.Sprites
 {

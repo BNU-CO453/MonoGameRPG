@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonoGameRPG.Tools
+namespace MonoGameRPG.Helpers
 {
     public static class TextureExtension
     {

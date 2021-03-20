@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoGameRPG.Tools
+namespace MonoGameRPG.Helpers
 {
     /// <summary>
     /// This Camera is adjustable in two main ways 
